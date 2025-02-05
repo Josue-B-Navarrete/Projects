@@ -41,6 +41,17 @@ public:
     ~ReadyQueue();
 
 	// You may add additional member functions, but don't change the definitions of the following four member functions.
+   
+   
+    /**
+     *  @brief Copy Constructor
+     */
+    ReadyQueue(const ReadyQueue& other);
+
+    /**
+     *  @brief Overloaded =operator
+     **/
+    ReadyQueue& operator=(ReadyQueue const& obj);
 
     /**
      * @brief Add a PCB representing a process into the ready queue.

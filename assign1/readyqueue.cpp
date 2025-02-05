@@ -21,6 +21,42 @@ using namespace std;
 ReadyQueue::~ReadyQueue() {
     delete heap;
 }
+/**
+ * @brief Copy Constructor
+ */
+ReadyQueue::ReadyQueue(const ReadyQueue& other){
+    capacity = other.capacity;
+    currentSize = other.currentSize;
+    heap = new PCB*[capacity];
+}
+
+/**
+ * @brief Overload =operator
+ */
+ReadyQueue& ReadyQueue::operator=(const ReadyQueue& other) {
+    // Check for self-assignment
+    if (this == &other) {
+        return *this;
+    }
+
+    // Free the existing heap array
+    delete[] heap; // Correctly deallocate the array
+
+    // Copy primitive members
+    capacity = other.capacity;
+    currentSize = other.currentSize;
+
+    // Allocate new heap array
+    heap = new PCB*[capacity];
+
+    for (int i = 0; i < currentSize; ++i) {
+        heap[i] = other.heap[i];
+    }
+
+    return *this;
+}
+
+
 
 /**
  * @brief Add a PCB representing a process into the ready queue.
