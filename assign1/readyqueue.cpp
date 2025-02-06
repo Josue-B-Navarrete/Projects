@@ -25,7 +25,7 @@ ReadyQueue::~ReadyQueue() {
 /**
  * @brief Copy Constructor
  *
- * @param other: The source object to be copied
+ * @param other: ReadyQueue object, the source object to be copied
  */
 ReadyQueue::ReadyQueue(const ReadyQueue& other){
     // Assigns the capacity and size from the source object to a new heap array
@@ -34,11 +34,12 @@ ReadyQueue::ReadyQueue(const ReadyQueue& other){
     heap = new PCB*[capacity];
 }
 
-/**
- * @brief Overload =operator
- *
- * @param other: The source object
- */
+ /**
+  * @brief Overloaded =operator
+  *
+  * @param obj: ReadyQueue object, the source object
+  * @returns this: A reference to current object being modified during the assignment operation
+  **/
 ReadyQueue& ReadyQueue::operator=(const ReadyQueue& other) {
     // Check for self-assignment
     if (this == &other) {
