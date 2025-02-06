@@ -10,6 +10,7 @@ using namespace std;
  * @brief Constructor for the ReadyQueue class.
  */
  ReadyQueue::ReadyQueue()  {
+     // Intializes the heap with values denoting the amount of elements it can hold (100) and its size upon creation (0/empty)
      capacity = 100;  
      currentSize = 0;
      heap = new PCB*[capacity];
@@ -23,8 +24,11 @@ ReadyQueue::~ReadyQueue() {
 }
 /**
  * @brief Copy Constructor
+ *
+ * @param other: The source object to be copied
  */
 ReadyQueue::ReadyQueue(const ReadyQueue& other){
+    // Assigns the capacity and size from the source object to a new heap array
     capacity = other.capacity;
     currentSize = other.currentSize;
     heap = new PCB*[capacity];
@@ -32,6 +36,8 @@ ReadyQueue::ReadyQueue(const ReadyQueue& other){
 
 /**
  * @brief Overload =operator
+ *
+ * @param other: The source object
  */
 ReadyQueue& ReadyQueue::operator=(const ReadyQueue& other) {
     // Check for self-assignment
