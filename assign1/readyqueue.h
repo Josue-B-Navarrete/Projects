@@ -44,12 +44,17 @@ public:
    
    
     /**
-     *  @brief Copy Constructor
+     * @brief Copy Constructor
+     *
+     * @param other: ReadyQueue object
      */
     ReadyQueue(const ReadyQueue& other);
 
     /**
-     *  @brief Overloaded =operator
+     * @brief Overloaded =operator
+     *
+     * @param obj: ReadyQueue object
+     * @returns this: A reference to current object being modified during the assignment operation
      **/
     ReadyQueue& operator=(ReadyQueue const& obj);
 
