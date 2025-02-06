@@ -15,6 +15,7 @@
  * @param size: the capacity of the PCBTable
  */
 PCBTable::PCBTable(int size) {
+    // Uses the resize member function to dynamically change the size of the table as needed
     table.resize(size, nullptr);
 }
 
@@ -39,6 +40,8 @@ PCBTable::~PCBTable() {
  * @return PCB*: pointer to the PCB at index "idx"
  */
 PCB* PCBTable::getPCB(unsigned int idx) {
+    // Returns a null pointer should the index be beyond the scope of the table
+    // Otherwise, returns the value at the index
     if (idx >= table.size()) {
         return nullptr;
     }
