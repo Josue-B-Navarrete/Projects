@@ -31,6 +31,14 @@ using namespace std;
 int parse_command(char command[], char *args[])
 {
     // TODO: implement this function
+    char *ptr = strtok(command, " ");
+    int i = 0;
+    while(ptr != NULL) {
+        args[i] = ptr;
+        ptr = strtok(NULL, " ");
+        i++;
+    }
+    return i + 1;
 }
 
 // TODO: Add additional functions if you need
@@ -57,6 +65,22 @@ int main(int argc, char *argv[])
         fgets(command, MAX_LINE, stdin);
         // Parse the input command
         int num_args = parse_command(command, args);
+
+        int rc = fork();
+        if(rc < 0) {
+            //fork failed
+            fprint(stderr, "Fork failed\n");
+            exit(1); //should_run == 0 (?)
+        } else if(rc == 0) {
+            //child process
+            args[num_args]; //unsure if this is right
+            //need an if statment to check for a '&'
+            //if there is one, don't wait
+            execvp(args[0], args);
+            printf("This shouldn't print\n");
+        } else {
+            int wc = wait(NULL);
+        }
 
         // TODO: Add your code for the implementation
         /**
