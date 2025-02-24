@@ -24,9 +24,9 @@ using namespace std;
 /**
  * @brief parse out the command and arguments from the input command separated by spaces
  *
- * @param command
- * @param args
- * @return int
+ * @param command The char array that holds the user input before parsing
+ * @param args The char array that holds the parsed out command line arguments
+ * @return int The total number of parsed out command line arguments
  */
 int parse_command(char command[], char *args[])
 {
