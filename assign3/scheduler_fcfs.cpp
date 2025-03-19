@@ -42,6 +42,10 @@ void SchedulerFCFS::simulate() {
     int current_time = 0;
     
     for(int i = 0; i < n; i++) {
+        // Print which process is running and for how long
+        std::cout << "Running Process " << process_list[i].name 
+                  << " for " << process_list[i].burst_time << " time units" << std::endl;
+
         // Update the wait time for the current process
         wait_times[i] = current_time;
         
@@ -61,7 +65,6 @@ void SchedulerFCFS::simulate() {
 void SchedulerFCFS::print_results() {
     int n = process_list.size();
     
-    std::cout << std::endl;
     for(int i = 0; i < n; i++) {
         std::cout << process_list[i].name 
                   << " turn-around time = " << turnaround_times[i]
