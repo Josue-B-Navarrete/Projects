@@ -18,6 +18,12 @@
 class SchedulerFCFS : public Scheduler {
 private:
     // TODO: add necessary member variables here for your implementation
+    // Member variables to store the process list and statistics
+    std::vector<PCB> process_list;
+    std::vector<int> wait_times;      
+    std::vector<int> turnaround_times; 
+    int total_wait_time;      // Total wait time for all processes
+    int total_turnaround_time; // Total turnaround time for all processes
 
 public:
     /**

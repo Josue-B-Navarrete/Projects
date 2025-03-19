@@ -20,12 +20,16 @@ SchedulerFCFS::SchedulerFCFS(){
 }
 
 SchedulerFCFS::~SchedulerFCFS(){
-    process.clear();
+    process_list.clear();
 }
 
-SchedulerFCFS::void init(vector<PCB>& process_list){
+// Initialize the scheduler with the given process list
+void SchedulerFCFS::init(std::vector<PCB>& processes) {
     // Store the process list
     process_list = processes;
+    // Initialize wait times and turnaround times arrays
+    wait_times.resize(process_list.size(), 0);
+    turnaround_times.resize(process_list.size(), 0);
 }
 
 // Simulate the FCFS scheduling algorithm
@@ -39,24 +43,33 @@ void SchedulerFCFS::simulate() {
     
     for(int i = 0; i < n; i++) {
         // Update the wait time for the current process
-        process_list[i].wait_time = current_time;
+        wait_times[i] = current_time;
         
         // Update turnaround time (wait time + burst time)
-        process_list[i].turnaround_time = process_list[i].wait_time + process_list[i].burst_time;
+        turnaround_times[i] = wait_times[i] + process_list[i].burst_time;
         
         // Move time forward after processing this job
         current_time += process_list[i].burst_time;
         
         // Accumulate statistics
-        total_wait_time += process_list[i].wait_time;
-        total_turnaround_time += process_list[i].turnaround_time;
+        total_wait_time += wait_times[i];
+        total_turnaround_time += turnaround_times[i];
     }
 }
 
 // Print the results of the simulation
 void SchedulerFCFS::print_results() {
+    int n = process_list.size();
+    
+    std::cout << std::endl;
+    for(int i = 0; i < n; i++) {
+        std::cout << process_list[i].name 
+                  << " turn-around time = " << turnaround_times[i]
+                  << ", waiting time = " << wait_times[i] << std::endl;
+    }
     
     // Print average statistics
-    std::cout << "\nAverage Wait Time: " << static_cast<double>(total_wait_time) / n << std::endl;
-    std::cout << "Average Turnaround Time: " << static_cast<double>(total_turnaround_time) / n << std::endl;
+    std::cout << "Average turn-around time = " << static_cast<double>(total_turnaround_time) / n << ", ";
+    std::cout << "Average waiting time = " << static_cast<double>(total_wait_time) / n << std::endl;
+    
 }
