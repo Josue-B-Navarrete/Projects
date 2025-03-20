@@ -1,0 +1,13 @@
+---
+:id: 318292581
+:submitters:
+- :name: Xahn Millsape
+  :email: mills087@csusm.edu
+- :name: Josue Navarrete
+  :email: navar345@csusm.edu
+:created_at: !ruby/object:ActiveSupport::TimeWithZone
+  utc: 2025-03-19 03:21:46.268176000 Z
+  zone: !ruby/object:ActiveSupport::TimeZone
+    name: America/Los_Angeles
+  time: 2025-03-18 20:21:46.268176000 Z
+:status: processed
