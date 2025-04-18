@@ -9,18 +9,18 @@
  #include <iostream>
  #include <pthread.h>
  #include <unistd.h>
- #include <mutex>
- #include <condition_variable>
+ #include <semaphore.h>
  #include <cstdlib>
+ #include <ctime>
  #include "buffer.h"
  
  using namespace std;
  
  // Global variables
  Buffer* buffer;
- mutex buffer_mutex;
- condition_variable not_full;
- condition_variable not_empty;
+ pthread_mutex_t mutex;
+ sem_t empty;
+ sem_t full;
  int sleep_time;
  int num_producers;
  int num_consumers;
@@ -39,21 +39,25 @@
          // Sleep for a random period of time
          usleep(rand() % 1000000);
          
-         // Critical section - try to insert an item
-         unique_lock<mutex> lock(buffer_mutex);
+         // Wait if buffer is full
+         sem_wait(&empty);
          
-         // Wait until buffer is not full
-         not_full.wait(lock, []{return !buffer->is_full();});
+         // Enter critical section
+         pthread_mutex_lock(&mutex);
          
+         // Insert item into buffer
          if (buffer->insert_item(item)) {
              cout << "Producer " << producer_id << ": Inserted item " << item << endl;
              buffer->print_buffer();
-             
-             // Signal that buffer is not empty
-             not_empty.notify_one();
          } else {
              cout << "Producer error condition" << endl;  // shouldn't come here
          }
+         
+         // Exit critical section
+         pthread_mutex_unlock(&mutex);
+         
+         // Signal that buffer has one more item
+         sem_post(&full);
      }
      
      return nullptr;
@@ -66,28 +70,31 @@
   */
  void* consumer(void* param) {
      buffer_item item;
-     // Consumer ID is not used in the output format
      
      while (true) {
          // Sleep for a random period of time
          usleep(rand() % 1000000);
          
-         // Critical section - try to remove an item
-         unique_lock<mutex> lock(buffer_mutex);
+         // Wait if buffer is empty
+         sem_wait(&full);
          
-         // Wait until buffer is not empty
-         not_empty.wait(lock, []{return !buffer->is_empty();});
+         // Enter critical section
+         pthread_mutex_lock(&mutex);
          
+         // Remove item from buffer
          if (buffer->remove_item(&item)) {
              // Format matches expected output - no consumer ID
              cout << "Consumer Removed item " << item << endl;
              buffer->print_buffer();
-             
-             // Signal that buffer is not full
-             not_full.notify_one();
          } else {
              cout << "Consumer error condition" << endl;  // shouldn't come here
          }
+         
+         // Exit critical section
+         pthread_mutex_unlock(&mutex);
+         
+         // Signal that buffer has one less item
+         sem_post(&empty);
      }
      
      return nullptr;
@@ -110,10 +117,19 @@
      num_producers = atoi(argv[2]);
      num_consumers = atoi(argv[3]);
      
-     // 2. Initialize buffer and seed random number generator
+     // 2. Initialize buffer, mutex, and semaphores
      buffer = new Buffer(5);  // Create buffer with size 5
+     
+     // Initialize mutex
+     pthread_mutex_init(&mutex, nullptr);
+     
+     // Initialize semaphores
+     sem_init(&empty, 0, buffer->get_size());  // Initially buffer is empty, so all slots are available
+     sem_init(&full, 0, 0);  // Initially buffer is empty, so no items are available
+     
+     // Seed random number generator
      srand(time(nullptr));
-    
+
      
      // 3. Create producer thread(s)
      pthread_t producer_threads[num_producers];
@@ -136,6 +152,12 @@
      // 5. Main thread sleep
      sleep(sleep_time);
      
+
+     
+     // Clean up resources (in a real implementation, you would properly terminate threads)
+     pthread_mutex_destroy(&mutex);
+     sem_destroy(&empty);
+     sem_destroy(&full);
      
      delete buffer;
      return 0;

@@ -28,6 +28,19 @@
       * @param size the size of the buffer
       */
      Buffer(int size = 5);
+     
+     /**
+      * @brief Copy constructor
+      * @param other The buffer to copy from
+      */
+     Buffer(const Buffer& other);
+     
+     /**
+      * @brief Assignment operator
+      * @param other The buffer to assign from
+      * @return Reference to this buffer
+      */
+     Buffer& operator=(const Buffer& other);
  
      /**
       * @brief Destroy the Buffer object

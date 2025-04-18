@@ -22,6 +22,48 @@
  }
  
  /**
+  * @brief Copy constructor
+  * @param other The buffer to copy from
+  */
+ Buffer::Buffer(const Buffer& other) {
+     size = other.size;
+     currentSize = other.currentSize;
+     front = other.front;
+     rear = other.rear;
+     
+     // Deep copy of the buffer
+     buff = new int[size];
+     for (int i = 0; i < size; i++) {
+         buff[i] = other.buff[i];
+     }
+ }
+ 
+ /**
+  * @brief Assignment operator
+  * @param other The buffer to assign from
+  * @return Reference to this buffer
+  */
+ Buffer& Buffer::operator=(const Buffer& other) {
+     if (this != &other) {
+         // Free existing resources
+         delete[] buff;
+         
+         // Copy from other
+         size = other.size;
+         currentSize = other.currentSize;
+         front = other.front;
+         rear = other.rear;
+         
+         // Deep copy of the buffer
+         buff = new int[size];
+         for (int i = 0; i < size; i++) {
+             buff[i] = other.buff[i];
+         }
+     }
+     return *this;
+ }
+ 
+ /**
   * @brief Destroy the Buffer object and free allocated memory
   */
  Buffer::~Buffer() {
@@ -51,28 +93,27 @@
   * @param item Pointer to store the removed item
   * @return true if removal successful, false if buffer is empty
   */
-  bool Buffer::remove_item(buffer_item *item) {
-    // Check if buffer is empty
-    if (is_empty()) {
-        return false;
-    }
-    
-    // Get the item at the front position and store it in the provided pointer
-    *item = buff[front];
-    
-    // Update front pointer with wrap-around
-    front = (front + 1) % size;
-    currentSize--;
-    
-    // Handle the case when the buffer becomes empty
-    if (currentSize == 0) {
-        // You could reset pointers here if desired
+ bool Buffer::remove_item(buffer_item *item) {
+     // Check if buffer is empty
+     if (is_empty()) {
+         return false;
+     }
+     
+     // Get the item at the front position and store it in the provided pointer
+     *item = buff[front];
+     
+     // Update front pointer with wrap-around
+     front = (front + 1) % size;
+     currentSize--;
+     
+     // Reset front and rear pointers only when buffer becomes empty
+     if (currentSize == 0) {
          front = 0;
          rear = -1;
-    }
-    
-    return true;
-}
+     }
+     
+     return true;
+ }
  
  /**
   * @brief Get the maximum size of the buffer
@@ -110,19 +151,19 @@
   * @brief Print the current contents of the buffer
   */
  void Buffer::print_buffer() {
-    if (is_empty()) {
-        std::cout << "Buffer: []" << std::endl;
-        return;
-    }
-    
-    std::cout << "Buffer: [";
-    int index = front;
-    for (int count = 0; count < currentSize; count++) {
-        std::cout << buff[index];
-        if (count < currentSize - 1) {
-            std::cout << ", ";
-        }
-        index = (index + 1) % size;
-    }
-    std::cout << "]" << std::endl;
-}
+     if (is_empty()) {
+         std::cout << "Buffer: []" << std::endl;
+         return;
+     }
+     
+     std::cout << "Buffer: [";
+     int index = front;
+     for (int count = 0; count < currentSize; count++) {
+         std::cout << buff[index];
+         if (count < currentSize - 1) {
+             std::cout << ", ";
+         }
+         index = (index + 1) % size;
+     }
+     std::cout << "]" << std::endl;
+ }
