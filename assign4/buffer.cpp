@@ -1,7 +1,7 @@
 /**
  * Assignment 4: Producer Consumer Problem
  * @file buffer.cpp
- * @author ??? (TODO: your name)
+ * @author Josue Navarrete and Xahn Millsape
  * @brief Implementation file for the buffer class
  * @version 0.1
  */
